@@ -1,33 +1,37 @@
 package com.wenfeng.yamba;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
-public class StatusActivity extends Activity implements OnClickListener {
-	private static final String TAG = "StatusActivity";
-	private EditText editStatus;
-	private Button buttonTweet;
-
+public class StatusActivity extends Activity {
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_status);
+		setContentView(R.layout.new_activity_status);
 		
-		editStatus = (EditText)findViewById(R.id.editStatus);
-		buttonTweet = (Button)findViewById(R.id.buttonTweet);
+//		/* This part can use Fragment dynamically*/
+
+//		if(savedInstanceState == null) {
+//			StatusFragment fragment = new StatusFragment();
+//			getFragmentManager().beginTransaction().add(android.R.id.content, fragment, fragment.getClass().getSimpleName()).commit();
+//		}
 		
-		buttonTweet.setOnClickListener(this);
 	}
 
 	@Override
@@ -36,33 +40,5 @@ public class StatusActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.status, menu);
 		return true;
 	}
-
-	@Override
-	public void onClick(View v) {
-		String status = editStatus.getContext().toString();
-		Log.d(TAG, "onClicked with status:" + status);
-		new PostTask().execute(status);
-	}
-
-	private final class PostTask extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-			YambaClient yambaCloud = new YambaClient("student", "password");
-			try {
-				yambaCloud.postStatus(params[0]);
-				return "Successfully posted";
-			} catch (YambaClientException e) {
-				e.printStackTrace();
-				return "Failed to post to Yamba service";
-			}
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
-		}
-		
-	}
+	
 }

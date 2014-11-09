@@ -24,6 +24,17 @@
         android:layout_below="@+id/buttonTweet"
         android:ems="10"
         android:hint="@string/hint_status"
+        android:gravity="top"
         android:inputType="textMultiLine" />
+
+    <TextView
+        android:id="@+id/textCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonTweet"
+        android:layout_alignBottom="@+id/buttonTweet"
+        android:layout_alignLeft="@+id/editStatus"
+        android:text="140"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

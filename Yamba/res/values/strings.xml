@@ -6,5 +6,15 @@
     <string name="hello_world">Hello world!</string>
     <string name="button_tweet">Tweet</string>
     <string name="hint_status">What\'s going on?</string>
+    <string name="username">Username</string>
+    <string name="usernameSummary">UsernameSummary</string>
+    <string name="password">Password</string>
+    <string name="passwordSummary">PasswordSummary</string>
+    <string name="apiRoot">ApiRoot</string>
+    <string name="apiRootSummary">ApiRootSummary</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tweet">Tweet</string>
+    <string name="refresh">Refresh</string>
+    <string name="purge">Purge</string>
 
 </resources>
