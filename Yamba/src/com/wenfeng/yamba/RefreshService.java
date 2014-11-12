@@ -3,8 +3,10 @@ package com.wenfeng.yamba;
 import java.util.List;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -23,11 +25,11 @@ public class RefreshService extends IntentService {
 	}
 
 
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public IBinder onBind(Intent arg0) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public void onCreate() {
@@ -60,13 +62,22 @@ public class RefreshService extends IntentService {
 			Toast.makeText(this, "Please update your username and password.", Toast.LENGTH_LONG).show();
 			return;
 		}
-		Log.d(TAG, "onStarted");
 		
+		Log.d(TAG, "onStarted");
+		DBHelper dbHelper = new DBHelper(this);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
 		YambaClient cloud = new YambaClient(username, password);
 		try {
 			List<Status> timeline = cloud.getTimeline(20);
 			for(Status status : timeline) {
 				Log.d(TAG, String.format("%s: %s", status.getUser(), status.getMessage()));
+				values.clear();
+				values.put(StatusContract.Column.ID, status.getId());
+				values.put(StatusContract.Column.USER, status.getUser());
+				values.put(StatusContract.Column.MESSAGE, status.getMessage());
+				values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime());
+				db.insertWithOnConflict(StatusContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 			}
 		} catch (YambaClientException e) {
 			Log.d(TAG, "Failed to fetch the timeline");
