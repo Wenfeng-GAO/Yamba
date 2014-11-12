@@ -93,6 +93,7 @@ public class StatusFragment extends Fragment implements OnClickListener {
 					getActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
 					return "Please update your username and password";
 				}
+				yambaCloud = new YambaClient(username, password);
 				yambaCloud.postStatus(params[0]);
 				return "Successfully posted";
 			} catch (YambaClientException e) {

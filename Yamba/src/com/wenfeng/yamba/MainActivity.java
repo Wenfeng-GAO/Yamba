@@ -32,6 +32,11 @@ public class MainActivity extends Activity {
 		case R.id.action_tweet:
 			startActivity(new Intent(this, StatusActivity.class));
 			return true;
+		case R.id.action_refresh:
+			System.out.println(555);
+			Log.d("TAG", "action_refresh");
+			startService(new Intent(this, RefreshService.class));
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
