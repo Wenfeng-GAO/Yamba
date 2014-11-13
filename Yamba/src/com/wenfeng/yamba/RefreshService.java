@@ -69,7 +69,10 @@ public class RefreshService extends IntentService {
 		ContentValues values = new ContentValues();
 		YambaClient cloud = new YambaClient(username, password);
 		try {
-			List<Status> timeline = cloud.getTimeline(20);
+//			int count = 0;
+			Log.d(TAG, "before list");
+			List<Status> timeline = cloud.getTimeline(10);
+			Log.d(TAG, "after list");
 			for(Status status : timeline) {
 				Log.d(TAG, String.format("%s: %s", status.getUser(), status.getMessage()));
 				values.clear();
@@ -78,8 +81,14 @@ public class RefreshService extends IntentService {
 				values.put(StatusContract.Column.MESSAGE, status.getMessage());
 				values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime());
 				db.insertWithOnConflict(StatusContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+				
+//				Uri uri = getContentResolver().insert(StatusContract.CONTENT_URI, values);
+//				if(uri != null) {
+//					count++;
+//					Log.d(TAG, String.format("%d. %s: %s", count, status.getUser(), status.getMessage()));
+//				}
 			}
-		} catch (YambaClientException e) {
+			} catch (YambaClientException e) {
 			Log.d(TAG, "Failed to fetch the timeline");
 			e.printStackTrace();
 		}	
