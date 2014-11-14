@@ -57,9 +57,7 @@ public class StatusFragment extends Fragment implements OnClickListener {
 			@Override
 			public void afterTextChanged(Editable s) {
 				int count = 140 - s.length();
-				Log.d(TAG, "count:" + count);
 				textCount.setText(Integer.toString(count));
-				Log.d(TAG, "textCount:" + textCount.getText());
 				textCount.setTextColor(Color.GREEN);
 				if(count < 0)
 					textCount.setTextColor(Color.RED);
