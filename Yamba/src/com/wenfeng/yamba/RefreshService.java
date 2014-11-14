@@ -7,15 +7,20 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClient.Status;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
 public class RefreshService extends IntentService {	
 	static final String TAG = "RefreshService";
+	private Handler handler;
+	
 
 	public RefreshService() {
 		super(TAG);
@@ -25,6 +30,7 @@ public class RefreshService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG, "onCreated");
+		handler = new Handler();
 	}
 
 	@Override
@@ -49,7 +55,7 @@ public class RefreshService extends IntentService {
 			Log.d(TAG, "onHandleIntent");
 			
 			// Can not Toast directly here.
-			
+			handler.post(new DisplayToast("Please update your username and password."));
 			return;
 		}
 		ContentValues values = new ContentValues();
@@ -74,11 +80,26 @@ public class RefreshService extends IntentService {
 				if(uri != null) {
 					count++;
 					Log.d(TAG, String.format("%d. %s: %s", count, status.getUser(), status.getMessage()));
+					handler.post(new DisplayToast(String.format("%d. %s: %s", count, status.getUser(), status.getMessage())));
 				}
 			}
 			} catch (YambaClientException e) {
 			Log.d(TAG, "Failed to fetch the timeline");
 			e.printStackTrace();
 		}	
+	}
+
+	private class DisplayToast implements Runnable {
+		String mText;
+		
+		public DisplayToast(String text) {
+			this.mText = text;
+		}
+
+		@Override
+		public void run() {
+			Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_LONG).show();
+		}
+		
 	}
 }
