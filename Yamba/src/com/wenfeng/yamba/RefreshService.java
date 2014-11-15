@@ -80,7 +80,7 @@ public class RefreshService extends IntentService {
 				if(uri != null) {
 					count++;
 					Log.d(TAG, String.format("%d. %s: %s", count, status.getUser(), status.getMessage()));
-					handler.post(new DisplayToast(String.format("%d. %s: %s", count, status.getUser(), status.getMessage())));
+//					handler.post(new DisplayToast(String.format("%d. %s: %s", count, status.getUser(), status.getMessage())));
 				}
 			}
 			} catch (YambaClientException e) {
