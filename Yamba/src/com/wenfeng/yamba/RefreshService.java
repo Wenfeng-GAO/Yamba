@@ -65,7 +65,9 @@ public class RefreshService extends IntentService {
 			int count = 0;
 
 			// This is often disable to connect.
+			Log.d(TAG, "1");
 			List<Status> timeline = cloud.getTimeline(20);
+			Log.d(TAG, "2");
 
 			for(Status status : timeline) {
 				Log.d(TAG, String.format("%s: %s", status.getUser(), status.getMessage()));
@@ -75,17 +77,20 @@ public class RefreshService extends IntentService {
 				values.put(StatusContract.Column.MESSAGE, status.getMessage());
 				values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime());
 				Uri uri = getContentResolver().insert(StatusContract.CONTENT_URI, values);
-				Log.d(TAG, "onHandleIntent3");
 
 				if(uri != null) {
 					count++;
 					Log.d(TAG, String.format("%d. %s: %s", count, status.getUser(), status.getMessage()));
-//					handler.post(new DisplayToast(String.format("%d. %s: %s", count, status.getUser(), status.getMessage())));
+				}
+				
+				if(count > 0) {
+					sendBroadcast(new Intent("com.wenfeng.yamba.action.NEW_STATUSES").putExtra("count", count));
 				}
 			}
 			} catch (YambaClientException e) {
-			Log.d(TAG, "Failed to fetch the timeline");
-			e.printStackTrace();
+				handler.post(new DisplayToast("Failed to pull the statuses."));
+				Log.d(TAG, "Failed to fetch the timeline");
+				e.printStackTrace();
 		}	
 	}
 
